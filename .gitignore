@@ -1,0 +1,12 @@
+# IDE Specifics
+.idea/
+
+# Build Results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+
+*.user
+*.sln
+*.slnx
