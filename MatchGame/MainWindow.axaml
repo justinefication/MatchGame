@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
         x:Class="MatchGame.MainWindow"
-        Title="Find all the matching animals" Width="400" Height="450">
+        Title="Matcherate It!" Width="400" Height="450">
     <DockPanel>
         <TextBlock
             x:Name="TimerTextBlock"
@@ -18,11 +18,11 @@
         />
         
         <Grid x:Name="MainGrid" ColumnDefinitions="*,*,*,*" RowDefinitions="*,*,*,*">
-
             <!--
                 Improve Head First C# Match Game by consolidating common properties
-                of common TextBlock controls to avoid duplicates. We define the Styles
-                inside of Grid instead of Window.
+                of TextBlock controls to avoid duplicates. We define the Styles inside
+                of Grid instead of Window because the TextBlock controls that only
+                needs this pack of property setters are the ones in the grid.
             -->
             <Grid.Styles>
                 <Style Selector="TextBlock">
