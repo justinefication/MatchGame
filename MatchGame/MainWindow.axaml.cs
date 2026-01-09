@@ -3,6 +3,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using MatchGame.Core;
 using MatchGame.Core.Factory;
 
 namespace MatchGame;
@@ -22,8 +23,6 @@ public partial class MainWindow : Window
     private bool _findingMatch = false;
 
     private byte _matchFound = 0;
-
-    private readonly Random _randomizer;
     
     private int _tenthOfSecondsElapsed;
     
@@ -51,7 +50,6 @@ public partial class MainWindow : Window
         _timer.Tick += UpdateTimer;
         TimerTextBlock.PointerPressed += TimerTextBlock_PointerPressed;
         
-        _randomizer = new Random();
         SetupGame();
     }
 
@@ -63,7 +61,7 @@ public partial class MainWindow : Window
     private void SetupGame()
     {
         string[] categories = ["Animals", "Nature", "Smileys"];
-        byte selectedCategory = (byte) _randomizer.Next(categories.Length);
+        var selectedCategory = (byte) Randomizer.Instance.Next(categories.Length);
 
         EmojiFactory emojiFactory;
         switch (categories[selectedCategory])
@@ -83,7 +81,7 @@ public partial class MainWindow : Window
         // Distribute the emojis in our grid.
         foreach (var textBlock in MainGrid.Children.OfType<TextBlock>())
         {
-            var next = (byte) _randomizer.Next(emojis.Icons.Count);
+            var next = (byte) Randomizer.Instance.Next(emojis.Icons.Count);
             
             textBlock.Text = emojis.Icons[next];
             textBlock.IsVisible = true;

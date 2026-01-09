@@ -32,29 +32,23 @@ public class EmojiSmiley : IEmoji
     private const byte UniqueSelection = 8;
 
     /**
-     * Randomizes our selection of emojis.
-     */
-    private readonly Random _randomizer = new Random();
-
-    /**
      * Icons to guess.
      */
     public List<string> Icons { get; } = [];
 
     public EmojiSmiley()
     {
-        // Create a list of indexes from chestnut to strawberry
-        // emoji for us to pick up to randomly.
+        // Create a list of indexes for us to pick up to randomly.
         var indexes = Enumerable.Range(LowerBound, (UpperBound - LowerBound)).ToList();
 
         /*
-         * Pick a random emoji from chestnut (\U+1F330) to strawberry (\U+1F353)
+         * Pick a random emoji from smile (\U+1F600) to silence (\U+1F636)
          * then add it as a pair to our Icon collection. Afterward, remove that index
          * from our indexes so we don't pick it more than we need.
          */
         for (byte i = 0; i < UniqueSelection; i++)
         {
-            var index = _randomizer.Next(UniqueSelection);
+            var index = Randomizer.Instance.Next(UniqueSelection);
             Icons.AddRange([char.ConvertFromUtf32(indexes[index]), char.ConvertFromUtf32(indexes[index])]);
         
             indexes.RemoveAt(index);

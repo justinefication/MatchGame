@@ -32,19 +32,13 @@ public class EmojiNature : IEmoji
     private const byte UniqueSelection = 8;
 
     /**
-     * Randomizes our selection of emojis.
-     */
-    private readonly Random _randomizer = new Random();
-
-    /**
      * Icons to guess.
      */
     public List<string> Icons { get; } = [];
 
     public EmojiNature()
     {
-        // Create a list of indexes from chestnut to strawberry
-        // emoji for us to pick up to randomly.
+        // Create a list of indexes for us to pick up to randomly.
         var indexes = Enumerable.Range(LowerBound, (UpperBound - LowerBound)).ToList();
 
         /*
@@ -54,7 +48,7 @@ public class EmojiNature : IEmoji
          */
         for (byte i = 0; i < UniqueSelection; i++)
         {
-            var index = _randomizer.Next(UniqueSelection);
+            var index = Randomizer.Instance.Next(UniqueSelection);
             Icons.AddRange([char.ConvertFromUtf32(indexes[index]), char.ConvertFromUtf32(indexes[index])]);
         
             indexes.RemoveAt(index);
