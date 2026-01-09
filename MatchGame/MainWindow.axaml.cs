@@ -1,21 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using MatchGame.Core.Factory;
 
 namespace MatchGame;
 
 public partial class MainWindow : Window
 {
-    /**
-     * Timer
-     */
-    private DispatcherTimer _timer;
-
-    private int _tenthOfSecondsElapsed;
-    
     /**
      * Stores the <see cref="TextBlock"/> last selected
      * by our player.
@@ -29,7 +22,16 @@ public partial class MainWindow : Window
     private bool _findingMatch = false;
 
     private byte _matchFound = 0;
+
+    private readonly Random _randomizer;
     
+    private int _tenthOfSecondsElapsed;
+    
+    /**
+     * Timer
+     */
+    private DispatcherTimer _timer;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -41,15 +43,16 @@ public partial class MainWindow : Window
             textBlock.PointerPressed += TextBlock_PointerPressed;
         }
         
+        // Setup Game Timer
         _timer = new DispatcherTimer()
         {
             Interval = TimeSpan.FromSeconds(.1)
         };
         _timer.Tick += UpdateTimer;
-        
-        SetupGame();
-
         TimerTextBlock.PointerPressed += TimerTextBlock_PointerPressed;
+        
+        _randomizer = new Random();
+        SetupGame();
     }
 
     /**
@@ -59,28 +62,33 @@ public partial class MainWindow : Window
      */
     private void SetupGame()
     {
-        var animals = new List<string>()
+        string[] categories = ["Animals", "Nature", "Smileys"];
+        byte selectedCategory = (byte) _randomizer.Next(categories.Length);
+
+        EmojiFactory emojiFactory;
+        switch (categories[selectedCategory])
         {
-            "\U0001F43C", "\U0001F43C",    // Panda
-            "\U0001F425", "\U0001F425",    // Chicken
-            "\U0001F437", "\U0001F437",    // Pig
-            "\U0001F435", "\U0001F435",    // Monkey
-            "\U0001F431", "\U0001F431",    // Cat
-            "\U0001F436", "\U0001F436",    // Dog
-            "\U0001F43B", "\U0001F43B",    // Bear
-            "\U0001F430", "\U0001F430",    // Rabbit
-        };
-
-        var random = new Random();
-
+            case "Animals":
+                emojiFactory = new EmojiAnimalFactory();
+                break;
+            case "Nature":
+                emojiFactory = new EmojiNatureFactory();
+                break;
+            default:
+                emojiFactory = new EmojiSmileyFactory();
+                break;
+        }
+        var emojis = emojiFactory.CreateEmoji();
+        
+        // Distribute the emojis in our grid.
         foreach (var textBlock in MainGrid.Children.OfType<TextBlock>())
         {
-            var next = (byte) random.Next(animals.Count);
+            var next = (byte) _randomizer.Next(emojis.Icons.Count);
             
-            textBlock.Text = animals[next];
-            animals.RemoveAt(next);
-            
+            textBlock.Text = emojis.Icons[next];
             textBlock.IsVisible = true;
+            
+            emojis.Icons.RemoveAt(next);
         }
         
         _timer.Start();
